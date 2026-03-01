@@ -8,17 +8,30 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
+    <canvas id="bg-canvas"></canvas>
+    <div class="blueprint-grid"></div>
     <div class="gradient-glow left"></div>
     <div class="gradient-glow right"></div>
 
     <nav>
         <div class="logo">Zyad Wageh Abo Elmajd</div>
-        <div class="menu-toggle" id="mobile-menu">
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
+        <div class="nav-actions">
+            <div class="menu-toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <div class="theme-switch-wrapper">
+                <input type="checkbox" id="theme-toggle" class="theme-switch-input">
+                <label for="theme-toggle" class="theme-switch-label">
+                    <i data-lucide="sun" class="sun-icon"></i>
+                    <i data-lucide="moon" class="moon-icon"></i>
+                    <span class="switch-handle"></span>
+                </label>
+            </div>
         </div>
         <ul class="nav-list">
             <li><a href="#about">About</a></li>
@@ -48,14 +61,14 @@
         </section>
 
         <section id="about" class="container">
-            <h2 class="section-title">Professional Summary</h2>
+            <h2 class="section-title"><i data-lucide="user"></i> Professional Summary</h2>
             <p class="summary-text">
                 Civil Engineer graduate from the Faculty of Engineering, Port Said University. Skilled in using <strong>AutoCAD</strong> to create accurate and detailed architectural, structural, and execution drawings. Strong understanding of project requirements and engineering standards. Passionate about continuous learning and contributing to high-quality, innovative construction projects within collaborative teams.
             </p>
         </section>
 
         <section id="skills" class="container">
-            <h2 class="section-title">Skills & Tools</h2>
+            <h2 class="section-title"><i data-lucide="wrench"></i> Skills & Tools</h2>
             <div class="skills-grid">
                 <div class="skill-category">
                     <h3>Technical Skills</h3>
@@ -83,7 +96,7 @@
         </section>
 
         <section id="experience" class="container">
-            <h2 class="section-title">Work Experience</h2>
+            <h2 class="section-title"><i data-lucide="briefcase"></i> Work Experience</h2>
             <div class="experience-list">
                 <div class="exp-item">
                     <div class="exp-header">
@@ -120,7 +133,7 @@
         </section>
 
         <section id="achievements" class="container">
-            <h2 class="section-title">Key Achievements</h2>
+            <h2 class="section-title"><i data-lucide="award"></i> Key Achievements</h2>
             <div class="achievements-grid">
                 <div class="ach-card">
                     <div class="ach-val">10%</div>
@@ -146,7 +159,7 @@
         </section>
 
         <section id="education" class="container">
-            <h2 class="section-title">Education</h2>
+            <h2 class="section-title"><i data-lucide="graduation-cap"></i> Education</h2>
             <div class="edu-list">
                 <div class="edu-item">
                     <div class="edu-header">
@@ -171,11 +184,11 @@
 
         <section id="contact" class="container">
             <div class="contact-card">
-                <h2>Let's Build Something Together</h2>
+                <h2><i data-lucide="message-circle"></i> Let's Build Something Together</h2>
                 <div class="contact-links">
-                    <a href="mailto:zyadaboelmajd@gmail.com">zyadaboelmajd@gmail.com</a>
-                    <a href="tel:+966582525756">+966552886081</a>
-                    <a href="https://www.linkedin.com/in/zyad-abuelmajd?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank">LinkedIn Profile</a>
+                    <a href="mailto:zyadaboelmajd@gmail.com"><i data-lucide="mail"></i> Email</a>
+                    <a href="tel:+966582525756"><i data-lucide="phone"></i> Call</a>
+                    <a href="https://www.linkedin.com/in/zyad-abuelmajd?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank"><i data-lucide="linkedin"></i> LinkedIn</a>
                 </div>
             </div>
         </section>
@@ -186,6 +199,131 @@
     </footer>
 
     <script>
+        // Engineering Particle Animation
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        const particleCount = 60;
+        const connectionDistance = 150;
+        const mouse = { x: null, y: null, radius: 150 };
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 1;
+                this.baseX = this.x;
+                this.baseY = this.y;
+                this.density = (Math.random() * 30) + 1;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+            }
+
+            draw() {
+                ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent');
+                ctx.globalAlpha = 0.3; // Added transparency to dots
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.fill();
+                ctx.globalAlpha = 1;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+
+                // Mouse interaction
+                let dx = mouse.x - this.x;
+                let dy = mouse.y - this.y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+                if (distance < mouse.radius) {
+                    const force = (mouse.radius - distance) / mouse.radius;
+                    const directionX = dx / distance;
+                    const directionY = dy / distance;
+                    this.x -= directionX * force * 5;
+                    this.y -= directionY * force * 5;
+                }
+            }
+        }
+
+        function init() {
+            particles = [];
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+
+                for (let j = i; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < connectionDistance) {
+                        ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent');
+                        ctx.globalAlpha = (1 - (distance / connectionDistance)) * 0.2; // Reduced connection opacity
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                        ctx.globalAlpha = 1;
+                    }
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+
+        init();
+        animate();
+
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Dark Mode Toggle (iOS Style)
+        const themeToggle = document.getElementById('theme-toggle');
+        
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme) {
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            if (currentTheme === 'dark' && themeToggle) {
+                themeToggle.checked = true;
+            }
+        }
+
+        if (themeToggle) {
+            themeToggle.addEventListener('change', () => {
+                if (themeToggle.checked) {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    document.documentElement.removeAttribute('data-theme');
+                    localStorage.setItem('theme', 'light');
+                }
+            });
+        }
+
         // Smooth reveal on scroll
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
